@@ -106,7 +106,7 @@ export default () => {
   const physicsCube = new THREE.Mesh(geometry, material);
   app.add(physicsCube);
 
-  const physicsObject = physics.addBoxGeometry(app.position, app.quaternion, size.clone().multiplyScalar(0.5), false);
+  const physicsObject = physics.addBoxGeometry(app.position, app.quaternion, size.clone().multiplyScalar(0.5).multiply(app.scale), false);
   physics.setTrigger(physicsObject.physicsId);
 
   useFrame(({timestamp}) => {
