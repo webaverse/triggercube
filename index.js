@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import metaversefile from 'metaversefile';
-const {useFrame, useCleanup, usePhysics, useApp} = metaversefile;
+const {useFrame, useCleanup, usePhysics, useApp, useLocalPlayer} = metaversefile;
 
 const baseUrl = import.meta.url.replace(/(\/)[^\/\\]*$/, '$1');
 const texBase = 'Vol_52_2';
@@ -108,6 +108,20 @@ export default () => {
 
   const physicsObject = physics.addBoxGeometry(app.position, app.quaternion, size.clone().multiplyScalar(0.5).multiply(app.scale), false);
   physics.setTrigger(physicsObject.physicsId);
+
+  const localPlayer = useLocalPlayer();
+  app.addEventListener('triggerin', event => {
+    console.log('repo: triggerin: ', event.oppositePhysicsId);
+    if (event.oppositePhysicsId === localPlayer.characterController.physicsId) {
+      physicsCube.material.color.set('cyan');
+    }
+  });
+  app.addEventListener('triggerout', event => {
+    console.log('repo: triggerout: ', event.oppositePhysicsId);
+    if (event.oppositePhysicsId === localPlayer.characterController.physicsId) {
+      physicsCube.material.color.set('white');
+    }
+  });
 
   useFrame(({timestamp}) => {
     physicsCube.position.copy(physicsObject.position).sub(app.position);
